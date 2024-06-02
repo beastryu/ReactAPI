@@ -11,16 +11,15 @@ const App = () => {
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const apiBaseUrl = process.env.API_ENDPOINT;
+  const apiBaseUrl = process.env.REACT_APP_API_ENDPOINT;
   
   const [id, setID] = useState('');
-  const [galleryUrl, setGalleryUrl] = useState(null);
-  const [galleryData, setGalleryData] = useState(null);
-  const [galleryPrompt, setGalleryPrompt] = useState('');
+  const [gallery, setGallery] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [galleryError, setGalleryError] = useState(null);
 
   console.log('API Base URL:', apiBaseUrl); // Debugging log
+  console.log(process.env.REACT_APP_API_ENDPOINT);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +27,7 @@ const App = () => {
     setError(null);
 
     try {
-      const response = await fetch(`https://445aa2cd-93d1-4c09-a72e-6e6d543962ca-00-3g1jh9qp6erw2.janeway.replit.dev/generate-image`, {
+      const response = await fetch(`${apiBaseUrl}/generate-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,12 +59,12 @@ const App = () => {
     setGalleryError(null);
     
     try {
-      const response = await fetch(`${apiBaseUrl}/images/${id}`, {
+      const response = await fetch(`${apiBaseUrl}/check-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, id }),
+        body: JSON.stringify({ password, id: parseInt(id) }),
       });
 
       if (!response.ok) {
@@ -74,18 +73,20 @@ const App = () => {
 
       /*Waiter*/
       const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      setGalleryUrl(data.imageUrl);
-      setGalleryData(data.imageData);
-      setGalleryPrompt(data.prompt);
-    } catch (error) {
-      setGalleryError(error.message);
-    } finally {
-      setGalleryLoading(false);
-    }
-  }
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          if (Array.isArray(data)) {
+            setGallery(data);
+          } else {
+            setGallery([data]);
+          }
+        } catch (error) {
+          setGalleryError(error.message);
+        } finally {
+          setGalleryLoading(false);
+        }
+      };
 
   return (
     /*Diaplay*/
@@ -146,15 +147,19 @@ const App = () => {
         <button type="submit">Generate Image</button>
       </form>
       {galleryLoading && <p className="loading">Loading...</p>}
-      {galleryError && <p className="error">Error: {error}</p>}
-      {galleryUrl && (
+      {galleryError && <p className="error">Error: {galleryError}</p>}
+      {gallery.length > 0 && (
         <div className="generated-image">
           <h2>Generated Image Gallery</h2>
-          <img src={galleryUrl} alt="Generated From SQL" />
-          <a href={`data:image/png;base64,${galleryData}`} download="generated-image.png">
-            <button type="button">Download Image</button>
-          </a>
-          <p>The associated prompt: {galleryPrompt}</p>
+          {gallery.map((item) => (
+            <div key={item.id}>
+              <img src={`data:image/png;base64,${item.imageData}`} alt={`Generated From SQL ${item.id}`} />
+              <a href={`data:image/png;base64,${item.imageData}`} download={`generated-image-${item.id}.png`}>
+                <button type="button">Download Image</button>
+              </a>
+              <p>The associated prompt: {item.prompt}</p>
+            </div>
+          ))}
         </div>
       )}
     </div>
