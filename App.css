@@ -1,0 +1,137 @@
+/* App.css */
+
+/* Basic global styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/*Remove?*/
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Main App container */
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Header styling */
+.App-header {
+  background-color: #ff6f61;
+  width: 100%;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-title {
+  font-size: 2em;
+  margin: 0;
+}
+
+.App-intro {
+  font-size: 1.25em;
+  margin: 20px 0;
+}
+
+/* Container for the logo with animation */
+.logo-container {
+  display: inline-block;
+  animation: bounce infinite 10s ease-in-out;
+  margin-bottom: 20px;
+}
+
+/* Logo styling with circular cropping */
+.App-logo {
+  animation: spin infinite 5s linear;
+  width: 20vw; /* Responsive width */
+  height: 20vw; /* Responsive height to maintain circle */
+  object-fit: cover; /* Ensures the image covers the container */
+  border-radius: 50%; /* Makes the image circular */
+  max-width: 150px; /* Ensure it does not get too large on big screens */
+  max-height: 150px; /* Ensure it does not get too large on big screens */
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Input field styling */
+input {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 80%; /* Responsive width */
+  max-width: 300px; /* Ensure input does not get too large on big screens */
+}
+
+/* Button styling */
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  background-color: #ff6f61;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e65c50;
+}
+
+.generated-image {
+  margin-top: 20px;
+}
+
+/* Styling for the generated image */
+.generated-image img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading and error message styling */
+.loading,
+.error {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #ff6f61;
+}
+
+/* Bounce animation for the logo container */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-120px);
+  }
+  50% {
+    transform: translateX(120px);
+  }
+}
+
+/* Spin animation for the logo */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
