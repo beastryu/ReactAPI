@@ -87,6 +87,17 @@ const App = () => {
           setGalleryLoading(false);
         }
       };
+  const expandImage = (src) => {
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    modal.style.display = 'block';
+    modalImg.src = src;
+  };
+
+  const closeModal = () => {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+  };
 
   return (
     /*Diaplay*/
@@ -100,7 +111,7 @@ const App = () => {
       <p className="App-intro">
         Demo by Seth
       </p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-container">
         <input
           type="password"
           value={password}
@@ -122,14 +133,14 @@ const App = () => {
       {imageUrl && (
         <div className="generated-image">
           <h2>Generated Image</h2>
-          <img src={imageUrl} alt="Generated" />
+          <img src={imageUrl} alt="Generated" onClick={() => expandImage(imageUrl)} />
           <a href={`data:image/png;base64,${imageData}`} download="generated-image.png">
             <button type="button">Download Image</button>
           </a>
         </div>
       )}
-      <p className="App-intro">Gallery</p>
-      <form onSubmit={handleGallerySubmit}>
+<p className="App-intro">Gallery</p>
+      <form onSubmit={handleGallerySubmit} className="form-container">
         <input
           type="password"
           value={password}
@@ -141,27 +152,33 @@ const App = () => {
           type="text"
           value={id}
           onChange={(e) => setID(e.target.value)}
-          placeholder="ID"
+          placeholder="ID (Enter 0 to list all)"
           required
         />
-        <button type="submit">Generate Image</button>
+        <button type="submit">Retrieve Images</button>
       </form>
       {galleryLoading && <p className="loading">Loading...</p>}
       {galleryError && <p className="error">Error: {galleryError}</p>}
       {gallery.length > 0 && (
-        <div className="generated-image">
+        <div className="gallery">
           <h2>Generated Image Gallery</h2>
           {gallery.map((item) => (
-            <div key={item.id}>
-              <img src={`data:image/png;base64,${item.imageData}`} alt={`Generated From SQL ${item.id}`} />
-              <a href={`data:image/png;base64,${item.imageData}`} download={`generated-image-${item.id}.png`}>
-                <button type="button">Download Image</button>
-              </a>
-              <p>The associated prompt: {item.prompt}</p>
+            <div className="gallery-item" key={item.id}>
+              <img src={`data:image/png;base64,${item.imageData}`} alt={`Generated From SQL ${item.id}`} onClick={() => expandImage(`data:image/png;base64,${item.imageData}`)} />
+              <div className="gallery-item-div">
+                <p>The associated prompt: {item.prompt}</p>
+                <a href={`data:image/png;base64,${item.imageData}`} download={`generated-image-${item.id}.png`}>
+                  <button type="button">Download Image</button>
+                </a>
+              </div>
             </div>
           ))}
         </div>
       )}
+      <div id="modal" className="modal" onClick={closeModal}>
+        <span className="close" onClick={closeModal}>&times;</span>
+        <img className="modal-content" id="modal-img" alt=""/>
+      </div>
     </div>
   );
 };
